@@ -1,0 +1,70 @@
+body {
+    background: #f6f7fb;
+}
+
+.navbar-brand {
+    font-weight: 700;
+    font-size: 24px;
+    letter-spacing: 0.5px;
+}
+
+.page-title {
+    font-size: 22px;
+    font-weight: 600;
+    margin-bottom: 20px;
+}
+
+.card-custom {
+    border-radius: 12px !important;
+    border: none !important;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+}
+
+.info-box {
+    padding: 20px;
+    background: white;
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+.info-box h3 {
+    font-size: 32px;
+    font-weight: bold;
+}
+
+.info-label {
+    color: #777;
+}
+
+.search-input {
+    border: 2px solid #0d6efd !important;
+    padding: 10px;
+    font-size: 15px;
+    border-radius: 8px;
+}
+
+.search-input:focus {
+    border-color: #0a58ca !important;
+    box-shadow: 0 0 5px rgba(13, 110, 253, 0.4);
+}
+
+/* =============================
+   GLOBAL FORM INPUT STYLE
+============================= */
+input.form-control,
+select.form-select,
+textarea.form-control {
+    border: 2px solid #0f1215 !important;   /* border tebal */
+    border-radius: 8px;                     /* sudut lembut */
+    padding: 10px;                          /* biar lebih nyaman */
+    font-size: 15px;
+}
+
+/* Efek fokus */
+input.form-control:focus,
+select.form-select:focus,
+textarea.form-control:focus {
+    border-color: #0a58ca !important;
+    box-shadow: 0 0 6px rgba(13, 110, 253, 0.4);
+}

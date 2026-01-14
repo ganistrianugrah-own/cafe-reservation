@@ -1,0 +1,75 @@
+body {
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+    background: url('cafebg.jpg') no-repeat center center fixed;
+    background-size: cover;
+    color: #fff;
+}
+.overlay {
+    position: fixed;
+    top:0; left:0;
+    width:100%; height:100%;
+    background: rgba(0,0,0,0.65);
+    z-index: -1;
+}
+.main-container {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+.card-status {
+    width: 100%;
+    max-width: 700px;
+    background: rgba(30,30,30,0.85);
+    border-radius: 20px;
+    padding: 50px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.5);
+    text-align: center;
+}
+.cafe-name {
+    font-size: 34px;
+    font-weight: 900;
+    color: #fff;
+}
+.address {
+    font-size: 16px;
+    color: #ddd;
+    margin-bottom: 10px;
+}
+.clock {
+    font-size: 18px;
+    font-weight: 600;
+    color: #eee;
+    margin-bottom: 25px;
+}
+.status-text {
+    font-size: 28px;
+    font-weight: 700;
+    margin: 25px 0;
+    transition: all 0.3s;
+}
+.wa-btn {
+    background: #25D366;
+    color: white;
+    padding: 14px 24px;
+    border-radius: 50px;
+    font-size: 18px;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 15px;
+    transition: 0.3s;
+}
+.wa-btn:hover {
+    opacity: 0.9;
+    color: white;
+    text-decoration: none;
+}
+@media (max-width: 576px) {
+    .cafe-name { font-size: 28px; }
+    .status-text { font-size: 35px; }
+    .wa-btn { font-size: 16px; padding: 12px 20px; }
+}

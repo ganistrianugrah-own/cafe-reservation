@@ -17,5 +17,5 @@ VALUES
 ('$id_booking', '$jenis', '$tgl', '$kursi', '$nama', '$alamat', '$nohp', '$jam', '$status')
 ");
 
-header("Location: admin_booking.php");
+header("Location: admin_dashboard.php");
 ?>

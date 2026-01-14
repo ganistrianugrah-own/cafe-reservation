@@ -2,6 +2,12 @@ body {
     background: #f6f7fb;
 }
 
+.container-fixed {
+    max-width: 2500px; /* lebar maksimal */
+    min-width: 900px;  /* lebar minimal */
+    margin: 0 auto;    /* center */
+}
+
 .navbar-brand {
     font-weight: 700;
     font-size: 24px;
@@ -9,6 +15,7 @@ body {
 }
 
 .page-title {
+    margin-top: 80px; /* ruang bawah navbar */
     font-size: 22px;
     font-weight: 600;
     margin-bottom: 20px;

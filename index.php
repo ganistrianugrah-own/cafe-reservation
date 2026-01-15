@@ -5,35 +5,51 @@ include 'config.php';
 $wa_number = "6285715102910";
 $wa_text = urlencode("Halo kak, saya mau booking café via WhatsApp.");
 
-// Fungsi untuk hitung status kursi
 function getKursiStatus($koneksi) {
-    $qTotal = mysqli_query($koneksi, "SELECT total FROM total_kursi ORDER BY id DESC LIMIT 1");
-    $dTotal = mysqli_fetch_assoc($qTotal);
-    $totalKursi = intval($dTotal['total'] ?? 0);
+    $today = date("Y-m-d");
 
+    // Ambil total kursi terakhir
+    $qTotal = mysqli_query($koneksi, 
+        "SELECT total FROM total_kursi ORDER BY id DESC LIMIT 1"
+    );
+    $dTotal = mysqli_fetch_assoc($qTotal);
+    $total = intval($dTotal['total'] ?? 0);
+
+    // Hitung kursi terpakai (persis seperti admin_dashboard)
     $qTerpakai = mysqli_query($koneksi,
-        "SELECT COALESCE(SUM(jumlah_kursi), 0) AS terpakai 
-         FROM booking 
-         WHERE LOWER(status) IN ('pending','datang')"
+        "SELECT COALESCE(SUM(jumlah_kursi),0) AS terpakai
+         FROM booking
+         WHERE DATE(created_at) = '$today'
+         AND status IN ('pending','datang')"
     );
     $dTerpakai = mysqli_fetch_assoc($qTerpakai);
     $terpakai = intval($dTerpakai['terpakai'] ?? 0);
 
-    $sisa = max(0, $totalKursi - $terpakai);
+    // Hitung sisa kursi
+    $sisa = max(0, $total - $terpakai);
 
-    if ($sisa > 0) {
-        $status = "Kursi Masih Tersedia ($sisa kursi tersisa)";
-        $color  = "#28a745"; 
+    // Tentukan status tampilan
+    if ($terpakai == 0) {
+        $status = "Kursi Tersedia : $total kursi";
+        $color  = "#28a745";
+    } elseif ($sisa > 0) {
+        $status = "Kursi Tersedia : $sisa kursi";
+        $color  = "#28a745";
     } else {
         $status = "Kursi Sedang Penuh";
         $color  = "#dc3545";
     }
 
-    return ['status'=>$status, 'color'=>$color];
+    return [
+        'status'    => $status,
+        'color'     => $color,
+        'total'     => $total,
+        'terpakai'  => $terpakai,
+        'sisa'      => $sisa
+    ];
 }
 
-// Ambil status awal
-$kursiStatus = getKursiStatus($koneksi);
+$kursi = getKursiStatus($koneksi);
 ?>
 
 <!DOCTYPE html>
@@ -51,29 +67,36 @@ $kursiStatus = getKursiStatus($koneksi);
 
 <div class="main-container">
     <div class="card-status">
+
         <div class="cafe-name">Kinasih Cafe & Space - BSD</div>
         <div class="address">Jl. Boulevard No. 12, BSD, Tangerang Selatan</div>
 
-        <!-- Jam Realtime -->
+        <!-- Clock -->
         <div class="clock" id="clock">Loading time...</div>
 
-        <!-- Status Kursi -->
-        <div class="status-text" id="statusText" style="color: <?= $kursiStatus['color'] ?>">
-            <?= $kursiStatus['status'] ?>
+        <!-- STATUS KURSI (Realtime + Detail) -->
+        <div class="status-text" id="statusText" style="color: <?= $kursi['color'] ?>">
+            <?= $kursi['status'] ?><br>
+            <span style="color:#444; font-size:14px;">
+                Total: <?= $kursi['total'] ?> |
+                Terpakai: <?= $kursi['terpakai'] ?> |
+                Sisa: <?= $kursi['sisa'] ?>
+            </span>
         </div>
 
-        <!-- Tombol WA Booking -->
+        <!-- Tombol Booking -->
         <a class="wa-btn" 
            href="https://api.whatsapp.com/send?phone=<?= $wa_number ?>&text=<?= $wa_text ?>" 
            target="_blank">
             <img src="https://img.icons8.com/color/48/000000/whatsapp.png" width="28">
             Booking via WhatsApp
         </a>
+
     </div>
 </div>
 
 <script>
-// ===== Jam Realtime =====
+// Clock realtime
 function updateClock() {
     const now = new Date();
     const options = {
@@ -85,20 +108,29 @@ function updateClock() {
 setInterval(updateClock, 1000);
 updateClock();
 
-// ===== Auto Update Status Kursi =====
+// Realtime status kursi
 async function updateStatus() {
     try {
         const res = await fetch('get_status.php');
         const data = await res.json();
 
-        const statusText = document.getElementById('statusText');
-        statusText.innerHTML = data.status;
+        const statusText = document.getElementById("statusText");
+
         statusText.style.color = data.color;
-    } catch (error) {
-        console.error('Gagal update status:', error);
+        statusText.innerHTML = `
+            ${data.status}<br>
+            <span style="color:#444; font-size:14px;">
+                Total: ${data.total} |
+                Terpakai: ${data.terpakai} |
+                Sisa: ${data.sisa}
+            </span>
+        `;
+    } catch (err) {
+        console.error("Gagal update status:", err);
     }
 }
-setInterval(updateStatus, 10000); // update tiap 10 detik
+
+setInterval(updateStatus, 8000);
 updateStatus();
 </script>
 
